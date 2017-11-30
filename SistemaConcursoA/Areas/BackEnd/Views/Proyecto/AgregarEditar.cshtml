@@ -1,0 +1,210 @@
+﻿@model SistemaConcursoA.Models.Proyecto
+@{
+    ViewBag.Title = (Model.proyecto_id > 0 ? Model.nombre_proyecto : "Nuevo Registro");
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+    List<SistemaConcursoA.Models.Curso> curso = ViewBag.curso;
+    List<SistemaConcursoA.Models.Categoria> categoria = ViewBag.categoria;
+
+    List<SistemaConcursoA.Models.OrdenProyecto> ordenproyecto = ViewBag.ordenproyecto;
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Proyecto/Index">Proyecto</a></li>
+    <li class="active">@Model.proyecto_id</li>
+</ol>
+
+@using (Html.BeginForm("Guardar", "Proyecto", FormMethod.Post, new { id = "frm-proyecto" }))
+{
+    @Html.HiddenFor(x => x.proyecto_id)
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del Proyecto</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>ID:</label>
+                @Html.TextBoxFor(x => x.proyecto_id, new { @class = "form-control", @disabled = true })
+            </div>
+
+            <div class="form-group">
+                <label>Concurso:</label>
+                <select name="concurso_id" class="form-control">
+                    @foreach (var p in concurso)
+                    {
+                        <option @(Model.concurso_id.Equals(p.concurso_id) ? "selected" : "") value="@p.concurso_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Curso:</label>
+                <select name="curso_cod" class="form-control">
+                    @foreach (var p in curso)
+                    {
+                        <option @(Model.curso_cod.Equals(p.curso_cod) ? "selected" : "") value="@p.curso_cod" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select name="categoria_id" class="form-control">
+                    @foreach (var p in categoria)
+                    {
+                        <option @(Model.categoria_id.Equals(p.categoria_id) ? "selected" : "") value="@p.categoria_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre del Proyecto:</label>
+                @Html.TextBoxFor(x => x.nombre_proyecto, new { @class = "form-control"})
+                @Html.ValidationMessageFor(x => x.nombre_proyecto, null, new { @class = "label label-danger" })
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de Registro:</label>
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fecharegistro);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="nfecharegistro" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Hora de Registro:</label>
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.horaregistro);
+
+                    string hora;
+                    hora = dt.ToString("HH:mm:ss");
+
+                    <input type="time" name="nhoraregistro" value="@hora" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Estado:</label>
+                @{
+                    List<SelectListItem> estado = new List<SelectListItem>();
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Activo",
+                        Value = "Activo"
+                    });
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Inactivo",
+                        Value = "Inactivo",
+                    });
+                }
+                @Html.DropDownListFor(x => x.estado, estado, "Seleccione", new { @class = "form-control" })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Orden del Proyecto</div>
+        <div class="panel-body">
+            @if (ordenproyecto.Count == 0)
+            {
+                <div class="form-group">
+                    <label>Orden de Exposición:</label>
+                    <select name="orden" class="form-control">
+                        @for (int i = 1; i <= 20; i++)
+                        {
+                            <option value="@i" class="form-control">@i</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Hora de Exposición:</label>
+                    <input type="time" name="orden_hora" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                <label>Estado:</label>
+                    <select name="estado_orden" class="form-control">
+                        <option selected>Seleccione</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            }
+            else
+            {
+            <div class="form-group">
+                <label>Orden de Exposición:</label>
+                <select name="orden" class="form-control">
+                    @foreach (var c in ordenproyecto)
+                    {
+                        for (int i = 1; i <= 20; i++)
+                        {
+                            <option @(c.orden.Equals(i) ? "selected" : "") value="@i" class="form-control">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hora de Exposición:</label>
+                @foreach (var c in ordenproyecto)
+                {
+                    <input type="time" name="orden_hora" value="@c.horaexposicion" class="form-control" />
+                    @Html.ValidationMessageFor(x => c.horaexposicion, null, new { @class = "label label-danger" })
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Estado:</label>
+                <select name="estado_orden" class="form-control">
+                    @foreach (var c in ordenproyecto)
+                    {
+
+                    if (c.estado.Equals(""))
+                    {
+                        <option selected>Seleccione</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    }
+                    if (c.estado.Equals("Activo"))
+                    {
+                        <option>Seleccione</option>
+                        <option selected value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    }
+                    if (c.estado.Equals("Inactivo"))
+                    {
+                        <option>Seleccione</option>
+                        <option value="Activo">Activo</option>
+                        <option selected value="Inactivo">Inactivo</option>
+                    }
+                    }
+                </select>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/BackEnd/Proyecto" class="btn btn-danger">Cancelar</a>
+    </div>
+}

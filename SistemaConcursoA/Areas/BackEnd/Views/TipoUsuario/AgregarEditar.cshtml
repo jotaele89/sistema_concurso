@@ -1,0 +1,45 @@
+﻿@model SistemaConcursoA.Models.TipoUsuario
+@{
+    ViewBag.Title = (Model.tipousuario_id > 0 ? Model.nombre : "Nuevo registro");
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/TipoUsuario/Index">Tipo Usuario</a></li>
+    <li class="active">@Model.tipousuario_id</li>
+
+</ol>
+
+@using (Html.BeginForm("Guardar", "TipoUsuario", FormMethod.Post, new { id = "frm_tipousuario" }))
+{
+    @Html.HiddenFor(x => x.tipousuario_id)
+    <div class="panel panel-default">
+        <div class="panel-heading">Información de tipo usuario</div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.tipousuario_id)
+                @Html.TextBoxFor(x => x.tipousuario_id, new { @class = "form-control", disabled = true })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.nombre)
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "label label-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.descripcion)
+                @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "label label-danger" })
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/Backend/TipoUsuario" class="btn btn-danger">Cancelar</a>
+    </div>
+}

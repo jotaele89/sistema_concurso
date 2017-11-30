@@ -1,0 +1,113 @@
+﻿ @model SistemaConcursoA.Models.Proyecto
+
+
+@{
+
+
+    ViewBag.Title = (Model.proyecto_id > 0 ? Model.nombre_proyecto : "Nuevo Registro");
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+    List<SistemaConcursoA.Models.Curso> curso = ViewBag.curso;
+    List<SistemaConcursoA.Models.Categoria> categoria = ViewBag.categoria;
+    
+
+
+}
+
+<center><h2>Registrar Proyecto</h2></center>
+
+<script>
+    function habilitar(value)
+    {
+        if (value=="CATEGORIA D" || value == "CATEGORIA LIBRE" || value == "CATEGORIA D" || value == "CATEGORIA LIBRE") //este numero puede variar, no es estatico para que le pongas 4
+        {
+            // habilitamos
+            document.getElementById("curso_cod").disabled=true;
+        } else  {
+				// habilitamos
+			    document.getElementById("curso_cod").disabled = false;
+			  //  document.getElementById("curso_cod").value== "null";
+			}
+    }
+    function concurso(valor)
+    {
+        alert(valor);
+    }
+</script>
+
+
+@using (Html.BeginForm("Agregar", "Proyecto", FormMethod.Post, new { id = "frm-proyecto", @form = "form" }))
+{
+    @Html.HiddenFor(x => x.proyecto_id)
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del Proyecto</div>
+        <div class="panel-body">
+          @*  <div class="form-group">
+                <label>ID:</label>
+                @Html.TextBoxFor(x => x.proyecto_id, new { @class = "form-control", @disabled = true })
+            </div>*@
+
+            <div class="form-group ">
+                <label>Concurso:</label>
+                <select name="concurso_id" class="form-control" onchange="javascript:
+                    
+                    var str = location.pathname;
+                    var res = str.split('/');
+
+                    location = res[0] + '/' + res[1] + '/' + res[2] + '/' + res[3] + '/' + this.value;">
+                    @foreach (var p in concurso)
+                    {
+                        if (Session["id_concurso"].ToString().Equals(p.concurso_id.ToString()))
+                        {
+                            <option selected value="@p.concurso_id" class="form-control ">@p.nombre</option>
+                        }
+                        else
+                        {
+                            <option @(Model.concurso_id.Equals(p.concurso_id) ? "selected" : "") value="@p.concurso_id" class="form-control ">@p.nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+        
+                <div class="form-group col-xs-4">
+                    <label>Categoría:</label>
+                    <select name="categoria_id" id="categoria_id" onchange="habilitar(this.value);" class="form-control">
+                        @foreach (var p in categoria)
+                        {
+                            <option @(Model.categoria_id.Equals(p.categoria_id) ? "selected" : "") value="@p.nombre" class="form-control">@p.nombre</option>
+
+                        }
+                    </select>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label>Curso:</label>
+                        <select name="curso_cod" id="curso_cod" class="form-control">
+                            @foreach (var p in curso)
+                            {
+                                <option @(Model.curso_cod == (p.curso_cod) ? "selected" : "") value="@p.curso_cod" class="form-control ">@p.nombre</option>
+                                if (p.curso_cod == "")
+                                {
+                                    p.curso_cod = "null";
+                                }
+
+                            }
+                        </select>
+                    </div>
+         
+
+                <div class="form-group col-sm-5">
+                   
+                    @Html.TextBoxFor(x => x.nombre_proyecto, new { @class = "form-control", @placeholder="NOMBRE DE PROYECTO" })
+                    @Html.ValidationMessageFor(x => x.nombre_proyecto, null, new { @class = "label label-danger" })
+                </div>
+
+
+
+</div>
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Participantes</button>
+            <a href="~/FrontEnd/Home/Index" class="btn btn-danger btn-lg btn-block">Cancelar</a>
+        </div>
+    </div>
+
+        }

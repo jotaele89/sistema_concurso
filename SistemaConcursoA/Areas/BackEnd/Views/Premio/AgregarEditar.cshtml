@@ -1,0 +1,83 @@
+﻿@model SistemaConcursoA.Models.Premio
+@{
+    ViewBag.Title = (Model.premio_id > 0 ? Model.nombre : "Nuevo Premio");
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+    List<SistemaConcursoA.Models.Categoria> categoria = ViewBag.categoria;
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Premio/Index">Premio</a></li>
+    <li class="active">@Model.premio_id</li>
+</ol>
+
+@using (Html.BeginForm("Guardar", "Premio", FormMethod.Post, new { id = "frm-premio" }))
+{
+    @Html.HiddenFor(x => x.premio_id)
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del Premio</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>ID:</label>
+                @Html.TextBoxFor(x => x.premio_id, new { @class = "form-control", @disabled = true })
+
+            </div>
+
+            <div class="form-group">
+                <label>Concurso:</label>
+                <select name="concurso_id" class="form-control">
+                    @foreach (var p in concurso)
+                    {
+                        <option @(Model.concurso_id.Equals(p.concurso_id) ? "selected" : "") value="@p.concurso_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select name="categoria_id" class="form-control">
+                    @foreach (var p in categoria)
+                    {
+                        <option @(Model.categoria_id.Equals(p.categoria_id) ? "selected" : "") value="@p.categoria_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Premio:</label>
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "label label-danger" })
+
+            </div>
+            <div class="form-group">
+                <label>Descripcion:</label>
+                @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "label label-danger" })
+
+            </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                @{
+                    List<SelectListItem> estado = new List<SelectListItem>();
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Activo",
+                        Value = "Activo"
+                    });
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Inactivo",
+                        Value = "Inactivo",
+                    });
+                }
+                @Html.DropDownListFor(x => x.estado, estado, "Seleccione", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/BackEnd/Premio" class="btn btn-danger">Cancelar</a>
+    </div>
+                    }
+

@@ -1,0 +1,46 @@
+﻿@model SistemaConcursoA.Models.Concurso
+@{
+    ViewBag.Title = "Ver";
+}
+
+<h2>Ver</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Concurso/Index">Concurso</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada del Concurso</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID</dt>
+            <dd>@Model.concurso_id</dd>
+            <dt>Semestre</dt>
+            <dd>@Model.Semestre.nombre</dd>
+            <dt>Plan de estudios</dt>
+            <dd>@Model.PlanEstudio.nombre</dd>
+            <dt>Nombre</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Descripcion</dt>
+            <dd>@Model.descripcion</dd>
+            <dt>Fecha concurso</dt>
+            <dd>@Model.fechaconcurso</dd>
+            <dt>Hora de inicio</dt>
+            <dd>@Model.horainicio</dd>
+
+            <dt>Fecha inicio registro</dt>
+            <dd>@Model.fechaconcursoinicioregistro</dd>
+            <dt>Fecha fin registro</dt>
+            <dd>@Model.fechaconcursofinregistro</dd>
+            <dt>Hora inicio registro</dt>
+            <dd>@Model.horainicioregistro</dd>
+            <dt>Hora fin registro</dt>
+            <dd>@Model.horafinregistro</dd>
+            <dt>Tiempo de exposicion</dt>
+            <dd>@Model.tiempoexposicion</dd>
+            <dt>Estado</dt>
+            <dd>@Model.ESTADO</dd>
+        </dl>
+
+    </div>
+</div>

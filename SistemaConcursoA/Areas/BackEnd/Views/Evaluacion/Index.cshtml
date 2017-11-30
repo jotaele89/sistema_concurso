@@ -1,0 +1,85 @@
+﻿@model List<SistemaConcursoA.Models.Evaluacion>
+@{
+    List<SistemaConcursoA.Models.Categoria> categoria = ViewBag.categoria;
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+}
+
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "proyecto_id", ordenable: true },
+                    { leyenda: 'Concurso', style: 'width:200px;', columna: 'concurso', filtro: function () {
+                        return anexGrid_select({
+                            data: [
+                                { valor: '', contenido: 'Todo' },
+                                @foreach (var s in concurso)
+                            {
+                                    <text>
+                                        { valor: '@s.concurso_id', contenido: '@s.nombre' },
+                                    </text>
+                                    }
+                                ]
+                    });
+    }
+            },
+                    {
+                        leyenda: 'Categoría', style: 'width:200px;', columna: 'nombre', filtro: function () {
+                            return anexGrid_select({
+                                data: [
+                                    { valor: '', contenido: 'Todo' },
+                                    @foreach(var s in categoria)
+                                    {
+                                        <text>
+                                            { valor: '@s.categoria_id', contenido: '@s.nombre' },
+                                        </text>
+                                    }
+                                ]
+                            });
+                        }
+                    },
+
+                    { leyenda: "Nombre del Proyecto", columna: "nombre_proyecto", ordenable: true, filtro: true },
+
+                    { style: "width: 80px;" },//boton Calificar
+                ],
+
+                modelo: [
+
+                    { propiedad: "proyecto_id" },
+                    { propiedad: "concurso" },
+                    { propiedad: "nombre" },
+                    {
+                        propiedad: "nombre_proyecto", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Evaluacion/Evaluar/")'
+                            + obj.proyecto_id, contenido: valor
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Evaluacion/Evaluar/")'
+                            + obj.proyecto_id, contenido: "Evaluar",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+                ],
+
+                url: '@Url.Content("~/Backend/Evaluacion/CargarGrilla/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'proyecto_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

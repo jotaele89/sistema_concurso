@@ -1,0 +1,33 @@
+﻿@model SistemaConcursoA.Models.ResultadoEvaluacion
+@{
+
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/ResultadoEvaluacion/VerResultados">Ver Resultados</a></li>
+</ol>
+
+@using (Html.BeginForm("ModificarResultado", "ResultadoEvaluacion", FormMethod.Post))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Modificar Resultado de Evaluación</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Proyecto:</label>
+                <input type="text" disabled value="@Model.Proyecto.nombre_proyecto" class="form-control" />
+                <input type="hidden" value="@Model.proyecto_id" name="proyecto_id" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Penalidad:</label>
+                <input type="number" value="@Model.penalidad" name="penalidad" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/BackEnd/ResultadoEvaluacion/VerResultados" class="btn btn-danger">Cancelar</a>
+    </div>
+}

@@ -1,0 +1,140 @@
+﻿@model string[,]
+@{
+    string data = "";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Consulta de Cantidad de Proyectos por Concurso</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta08", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Gráficos Estadísticos</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione el Gráfico:</label>
+                <select name="grafico" class="form-control">
+                    <option selected value="gpiramide">Gráfico de Pirámide</option>
+                    <option value="gmcirculo">Gráfico de Medio Círculo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Gráfico" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/funnel.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="grafico" style="min-width: 410px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+@if (Session["grafico"] != null)
+{
+    if (Session["grafico"].Equals("gpiramide"))
+    {
+        int count = 1;
+        int cantidad = Model.GetUpperBound(0);
+                for (int i = 0; i <= cantidad; i++)
+                {
+                    String name = Model[i, 0];
+                    String y = Model[i, 1];
+                    data = data + "[ '" + name + "',  " + y + "],";
+                }
+
+        <text>
+            <script>
+                Highcharts.chart('grafico', {
+    chart: {
+        type: 'pyramid'
+    },
+    title: {
+        text: 'Cantidad de Proyectos por Concurso',
+        x: -50
+    },
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b> ({point.y:,.0f})',
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                softConnector: true
+            },
+            center: ['40%', '50%'],
+            width: '80%'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    series: [{
+        name: 'Cantidad de Proyectos',
+         data: [
+                   @Html.Raw(data)
+
+                ]
+    }]
+});
+            </script>
+        </text>
+    }
+    else if (Session["grafico"].Equals("gmcirculo"))
+    {
+        int count = 1;
+        int cantidad = Model.GetUpperBound(0);
+                for (int i = 0; i <= cantidad; i++)
+                {
+                    String name = Model[i, 0];
+                    String y = Model[i, 1];
+                    data = data + "[ '" + name + "',  " + y + "],";
+
+                }
+
+        <text>
+            <script>
+        Highcharts.chart('grafico', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            title: {
+                text: 'Cantidad de <br>Proyectos por<br>Concurso',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 40
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Porcentaje',
+                innerSize: '50%',
+                data: [
+                   @Html.Raw(data)
+
+                ]
+            }]
+        });
+            </script>
+        </text>
+    }
+}

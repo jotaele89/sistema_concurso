@@ -1,0 +1,87 @@
+﻿
+@model List<SistemaConcursoA.Models.TipoUsuario>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/TipoUsuario/AgregarEditar/">Nuevo Tipo Usuario</a>
+</div>
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "tipousuario_id", ordenable: true },
+
+                    { leyenda: 'Tipo', style: 'width:200px;', columna: 'nombre', ordenable: true, filtro: true },
+
+                    { leyenda: "Descripción", columna: "descripcion" },
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+
+                    { propiedad: "tipousuario_id" },
+                    {
+                        propiedad: "nombre", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/TipoUsuario/AgregarEditar/")'
+                            + obj.tipousuario_id, contenido: valor
+                            });
+                        }
+                    },
+
+                    { propiedad: "descripcion" },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/TipoUsuario/Ver/")'
+                            + obj.tipousuario_id, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/TipoUsuario/AgregarEditar/")'
+                            + obj.tipousuario_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/TipoUsuario/Eliminar/")'
+                            + obj.tipousuario_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/TipoUsuario/CargarGrilla/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'tipousuario_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

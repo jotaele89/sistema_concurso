@@ -1,0 +1,30 @@
+﻿@model SistemaConcursoA.Models.Criterio
+@{
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Criterio/Index">Criterio</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada del Criterio</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.criterio_id</dd>
+            <dt>Concurso:</dt>
+            <dd>@Model.Concurso.nombre</dd>
+            <dt>Nombre:</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Puntaje:</dt>
+            <dd>@Model.puntaje</dd>
+            <dt>Estado:</dt>
+            <dd>@Model.estado</dd>
+        </dl>
+    </div>
+</div>
+

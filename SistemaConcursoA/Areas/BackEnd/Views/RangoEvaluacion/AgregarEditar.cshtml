@@ -1,0 +1,56 @@
+﻿@model SistemaConcursoA.Models.RangoEvaluacion
+@{
+    ViewBag.Title = (Model.rango_id > 0 ? Model.nombre : "Nuevo registro");
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/RangoEvaluacion/Index">Rango evaluacion</a></li>
+    <li class="active">@Model.rango_id</li>
+
+</ol>
+
+@using (Html.BeginForm("Guardar", "RangoEvaluacion", FormMethod.Post, new { id = "frm_rangoevaluacion" }))
+{
+    @Html.HiddenFor(x => x.rango_id)
+    <div class="panel panel-default">
+        <div class="panel-heading">Información de rango de evaluación</div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.rango_id)
+                @Html.TextBoxFor(x => x.rango_id, new { @class = "form-control", disabled = true })
+            </div>
+
+            <div class="form-group">
+                <label>Concurso:</label>
+                <select name="concurso_id" class="form-control">
+                    @foreach (var m in concurso)
+                    {
+                        <option @(Model.concurso_id == m.concurso_id ? "Selected" : "") value="@m.concurso_id">@m.nombre </option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.nombre)
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "label label-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.puntaje)
+                @Html.TextBoxFor(x => x.puntaje, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.puntaje, null, new { @class = "label label-danger" })
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/Backend/RangoEvaluacion" class="btn btn-danger">Cancelar</a>
+    </div>
+}

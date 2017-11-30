@@ -1,0 +1,104 @@
+﻿@model List<SistemaConcursoA.Models.Semestre>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/Semestre/AgregarEditar/">Nuevo Semestre</a>
+</div>
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "semestre_id", ordenable: true },
+
+                    { leyenda: 'Semestre', style: 'width:200px;', columna: 'nombre', ordenable: true, filtro: true },
+
+                    { leyenda: "Año", columna: "anio" },
+                     { leyenda: "Fecha Inicio", columna: "fechainicio" },
+                      { leyenda: "Fecha Fin", columna: "fechafin" },
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+
+                    { propiedad: "semestre_id" },
+                    {
+                        propiedad: "nombre", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Semestre/AgregarEditar/")'
+                            + obj.semestre_id, contenido: valor
+                            });
+                        }
+                    },
+
+
+                { propiedad: 'anio' },
+
+                //atributo 4 fecha inicio
+                {
+                    propiedad: 'fechainicio', class: 'center', formato: function (tr, obj, valor)
+                    { return moment(valor).format("DD/MM/YYYY"); }
+                },
+
+                    //atributo 5 fecha fin
+                {
+                    propiedad: 'fechafin', class: 'center', formato: function (tr, obj, valor)
+                    { return moment(valor).format("DD/MM/YYYY"); }
+                },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Semestre/Ver/")'
+                            + obj.semestre_id, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Semestre/AgregarEditar/")'
+                            + obj.semestre_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Semestre/Eliminar/")'
+                            + obj.semestre_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/Semestre/CargarGrilla/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'semestre_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

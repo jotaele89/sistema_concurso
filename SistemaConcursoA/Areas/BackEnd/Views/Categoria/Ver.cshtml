@@ -1,0 +1,52 @@
+﻿@model SistemaConcursoA.Models.Categoria
+@{
+    List<SistemaConcursoA.Models.CategoriaJurado> categoriajurado = ViewBag.categoriajurado;
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Categoria/Index/@Model.categoria_id">Categoría</a></li>
+    <li class="active">@Model.nombre</li><!--a-->
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada de la Categoría</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.categoria_id</dd>
+            <dt>Concurso:</dt>
+            <dd>@Model.Concurso.nombre</dd>
+            <dt>Categoría:</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Descripción:</dt>
+            <dd>@Model.descripcion</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Jurados de la Categoría</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Código</th>
+                    <th style="width: 200px;">Nombre</th>
+                    <th style="width: 200px;">Apellido</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in categoriajurado)
+                {
+                    <tr>
+                        <th>@m.Persona.codigo</th>
+                        <th>@m.Persona.nombre</th>
+                        <th>@m.Persona.apellido</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

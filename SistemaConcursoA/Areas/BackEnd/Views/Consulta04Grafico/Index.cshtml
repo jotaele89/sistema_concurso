@@ -1,0 +1,271 @@
+﻿@model List<SistemaConcursoA.Models.Categoria>
+@{
+    string data_serie = "";
+    string data_categoria = "";
+    string data_valor = "";
+    string data_valores = "";
+    List<SistemaConcursoA.Models.ResultadoGanadorCategoria> puntaje = ViewBag.puntaje;
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+    SistemaConcursoA.Models.Concurso con = new SistemaConcursoA.Models.Concurso();
+    System.Collections.ArrayList categorias = con.listarcategorias();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Consulta de los Mayores Puntajes de las Categorias por Concurso</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta04Grafico", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Gráficos Estadísticos</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione el Gráfico:</label>
+                <select name="grafico" class="form-control">
+                    <option selected value="gbarra">Gráfico de Barras</option>
+                    <option value="garea">Gráfico de Área</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Gráfico" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/assets/js/highcharts/exporting.js"></script>
+<script src="~/assets/js/highcharts/highcharts-3d.js"></script>
+<script src="~/assets/js/highcharts/highcharts.js"></script>
+<script src="~/assets/js/highcharts/offline-exporting.js"></script>
+
+<div id="grafico"></div>
+@if (Session["grafico"] != null)
+{
+    if (Session["grafico"].Equals("gbarra"))
+    {
+        data_serie = "";
+        data_categoria = "";
+        data_valor = "";
+        data_valores = "";
+
+        foreach (var co in concurso)
+        {
+            data_categoria = data_categoria + "'" + co.nombre + "',";
+        }
+
+        foreach (var ca in categorias)
+        {
+            data_serie = data_serie + "{name: '" + ca + "', ";
+            foreach (var co in concurso)
+            {
+                var flag = false;
+                var flag1 = true;
+                var flag2 = false;
+                if (puntaje.Count == 0)
+                {
+                    flag2 = true;
+                }
+                foreach (var i in Model)
+                {
+                    if(i.concurso_id == co.concurso_id)
+                    {
+                        if(ca.Equals(i.nombre))
+                        {
+                            //data_serie = data_serie + "{name: '" + c.nombre + "', ";
+                            data_valor = " data: [";
+                            if (!flag2)
+                            {
+                                foreach (var p in puntaje)
+                                {
+                                    if (ca.Equals(p.Categoria.nombre))
+                                    {
+                                        if (i.concurso_id == p.concurso_id)
+                                        {
+                                            data_valores = data_valores + p.puntaje + ", ";
+                                            flag = true;
+                                            flag1 = false;
+                                            flag2 = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!flag)
+                                {
+                                    data_valores = data_valores + "0, ";
+                                    flag = false;
+                                    flag2 = false;
+                                    flag1 = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (flag1 == true)
+                {
+                    data_valores = data_valores + "0, ";
+                    flag1 = false;
+                    flag2 = false;
+                }
+            }
+
+            data_valor = data_valor + data_valores + "]";
+            data_valores = "";
+            data_serie = data_serie + data_valor + "}, ";
+        }
+
+        <text>
+            <script>
+        Highcharts.chart('grafico', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Consulta de los Mayores Puntajes de las Categorias por Concurso (Gráfico de Barras)'
+        },
+        xAxis: {
+            categories: [
+                @Html.Raw(data_categoria)
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Puntaje'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} puntos</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [@Html.Raw(data_serie)]
+        });
+            </script>
+        </text>
+    }
+    else if (Session["grafico"].Equals("garea"))
+    {
+        data_serie = "";
+        data_categoria = "";
+        data_valor = "";
+        data_valores = "";
+
+        foreach (var co in concurso)
+        {
+            data_categoria = data_categoria + "'" + co.nombre + "',";
+        }
+
+        foreach (var ca in categorias)
+        {
+            data_serie = data_serie + "{name: '" + ca + "', ";
+            foreach (var co in concurso)
+            {
+                var flag = false;
+                var flag1 = true;
+                var flag2 = false;
+                if (puntaje.Count == 0)
+                {
+                    flag2 = true;
+                }
+                foreach (var i in Model)
+                {
+                    if (i.concurso_id == co.concurso_id)
+                    {
+                        if (ca.Equals(i.nombre))
+                        {
+                            //data_serie = data_serie + "{name: '" + c.nombre + "', ";
+                            data_valor = " data: [";
+                            if (!flag2)
+                            {
+                                foreach (var p in puntaje)
+                                {
+                                    if (ca.Equals(p.Categoria.nombre))
+                                    {
+                                        if (i.concurso_id == p.concurso_id)
+                                        {
+                                            data_valores = data_valores + p.puntaje + ", ";
+                                            flag = true;
+                                            flag1 = false;
+                                            flag2 = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!flag)
+                                {
+                                    data_valores = data_valores + "0, ";
+                                    flag = false;
+                                    flag2 = false;
+                                    flag1 = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (flag1 == true)
+                {
+                    data_valores = data_valores + "0, ";
+                    flag1 = false;
+                    flag2 = false;
+                }
+            }
+
+            data_valor = data_valor + data_valores + "]";
+            data_valores = "";
+            data_serie = data_serie + data_valor + "}, ";
+        }
+
+        <text>
+            <script>
+        Highcharts.chart('grafico', {
+    chart: {
+        type: 'area'
+    },
+    title: {
+        text: 'Consulta de los Mayores Puntajes de las Categorias por Concurso (Gráfico de Áreas)'
+    },
+    xAxis: {
+        categories: [@Html.Raw(data_categoria)],
+        tickmarkPlacement: 'on',
+        title: {
+            enabled: false
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Puntaje'
+        }
+    },
+    tooltip: {
+        split: true,
+        valueSuffix: ' puntos'
+    },
+    plotOptions: {
+        area: {
+            stacking: 'normal',
+            lineColor: '#666666',
+            lineWidth: 1,
+            marker: {
+                lineWidth: 1,
+                lineColor: '#666666'
+            }
+        }
+    },
+    series: [@Html.Raw(data_serie)]
+});
+            </script>
+        </text>
+    }
+}

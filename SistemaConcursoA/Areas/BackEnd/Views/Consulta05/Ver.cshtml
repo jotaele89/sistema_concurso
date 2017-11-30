@@ -1,0 +1,60 @@
+﻿@model List<SistemaConcursoA.Models.Evaluacion>
+@{
+    List<SistemaConcursoA.Models.Evaluacion> evaluacion = ViewBag.evaluacion;
+    List<SistemaConcursoA.Models.Proyecto> proyecto = ViewBag.proyecto;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">Ficha de Evaluacion de Proyectos</div>
+</div>
+
+@foreach (var e in proyecto)
+            {
+                var flag = false;
+                var puntajetotal = 0;
+                foreach(var d in evaluacion)
+                {
+                    if(e.proyecto_id == d.proyecto_id)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag)
+                {
+    <div class="panel panel-default">
+    <div class="panel-heading">Ficha de Evaluación: @e.nombre_proyecto</div>
+    <div class="panel-heading">Categoría: @e.Categoria.nombre</div>
+    <div class="panel-heading">Curso: @e.Curso.nombre</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Criterio</th>
+                    <th style="width: 200px;">Puntaje</th>
+                    <th style="width: 200px;">Puntaje Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in evaluacion)
+        {
+            if (e.proyecto_id == m.proyecto_id)
+            {
+                        <tr>
+                            <th>@m.Criterio.nombre</th>
+                            <th>@m.RangoEvaluacion.puntaje</th>
+                        </tr>
+                        puntajetotal = puntajetotal + m.RangoEvaluacion.puntaje;
+                    }
+                }
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>@puntajetotal</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    }
+}

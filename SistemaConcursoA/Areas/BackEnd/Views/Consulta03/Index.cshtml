@@ -1,0 +1,132 @@
+﻿@model List<SistemaConcursoA.Models.Evaluacion>
+@{
+    List<SistemaConcursoA.Models.ResultadoEvaluacion> proyecto = ViewBag.proyecto;
+    List<SistemaConcursoA.Models.Categoria> categoria = ViewBag.categoria;
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">Consultas de los Proyectos ganadores por categoría</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta03", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Criterios de Búsqueda</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione Concurso:</label>
+                <select name="concurso_id" class="form-control" onchange="javascript:
+
+                    var str = location.pathname;
+                    var res = str.split('/');
+
+                    location = res[0] + '/' + res[1] + '/' + res[2] + '/' + 'Index/' + this.value;">
+                    @foreach (var p in concurso)
+                    {
+                        if (Session["id_concurso"].ToString().Equals(p.concurso_id.ToString()))
+                        {
+                            <option selected value="@p.concurso_id" class="form-control ">@p.nombre</option>
+                        }
+                        else
+                        {
+                            <option value="@p.concurso_id" class="form-control ">@p.nombre</option>
+                        }
+                    }
+                </select><br />
+            </div>
+            <div class="form-group">
+                <label>Seleccione Categoría:</label>
+                <select name="categoria" class="form-control">
+                    @foreach (var p in categoria)
+                    {
+                        <option value="@p.categoria_id" class="form-control">@p.nombre</option>
+                    }
+                </select><br />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Buscar" />
+            </div>
+        </div>
+    </div>
+}
+@try
+{
+    if (proyecto.Count != 0)
+    {
+        var cont = 0;
+        <div class="panel panel-default">
+            <div class="panel-heading">Resultados de los Proyectos Ganadores</div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Código</th>
+                            <th style="width: 200px;">Categoría</th>
+                            <th style="width: 200px;">Nombre del Proyecto</th>
+                            <th style="width: 200px;">Puntaje Total</th>
+                            <th style="width: 200px;">Título</th>
+                            <th style="width: 50px;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in proyecto)
+                    {
+                        if (cont == 0)
+                        {
+                                <tr>
+                                    <th>@m.proyecto_id</th>
+                                    <th>@m.Categoria.nombre</th>
+                                    <th>@m.Proyecto.nombre_proyecto</th>
+                                    <th>@Convert.ToDouble(Convert.ToDouble(m.puntaje) - Convert.ToDouble(m.penalidad))</th>
+                                    <th style="background:#ffd700;">Primer Puesto</th>
+                                    <th><a href="~/BackEnd/Consulta03/Ver/@m.proyecto_id" class="btn btn-primary">Detalle</a></th>
+                                </tr>
+                                cont++;
+                            }
+                            else if (cont == 1)
+                            {
+                                <tr>
+                                    <th>@m.proyecto_id</th>
+                                    <th>@m.Categoria.nombre</th>
+                                    <th>@m.Proyecto.nombre_proyecto</th>
+                                    <th>@Convert.ToDouble(Convert.ToDouble(m.puntaje) - Convert.ToDouble(m.penalidad))</th>
+                                    <th style="background:#b0b7b8;">Segundo Puesto</th>
+                                    <th><a href="~/BackEnd/Consulta03/Ver/@m.proyecto_id" class="btn btn-primary">Detalle</a></th>
+                                </tr>
+                                cont++;
+                            }
+                            else if (cont == 2)
+                            {
+                                <tr>
+                                    <th>@m.proyecto_id</th>
+                                    <th>@m.Categoria.nombre</th>
+                                    <th>@m.Proyecto.nombre_proyecto</th>
+                                    <th>@Convert.ToDouble(Convert.ToDouble(m.puntaje) - Convert.ToDouble(m.penalidad))</th>
+                                    <th style="background:#a0522d;">Tercer Puesto</th>
+                                    <th><a href="~/BackEnd/Consulta03/Ver/@m.proyecto_id" class="btn btn-primary">Detalle</a></th>
+                                </tr>
+                                cont++;
+                            }
+                            else
+                            {
+                                <tr>
+                                    <th>@m.proyecto_id</th>
+                                    <th>@m.Categoria.nombre</th>
+                                    <th>@m.Proyecto.nombre_proyecto</th>
+                                    <th>@Convert.ToDouble(Convert.ToDouble(m.puntaje) - Convert.ToDouble(m.penalidad))</th>
+                                    <th>Ningún Título</th>
+                                    <th><a href="~/BackEnd/Consulta03/Ver/@m.proyecto_id" class="btn btn-primary">Detalle</a></th>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+catch (Exception e)
+{
+
+}

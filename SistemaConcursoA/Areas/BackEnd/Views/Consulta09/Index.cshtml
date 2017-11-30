@@ -1,0 +1,141 @@
+﻿@model string[,]
+@{
+    string data = "";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Consulta de Cantidad de Personas por Tipo</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta09", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Gráficos Estadísticos</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione el Gráfico:</label>
+                <select name="grafico" class="form-control">
+                    <option selected value="gpiramidei">Gráfico de Pirámide Invertida</option>
+                    <option value="gbb">Gráfico de Barras en Bajada</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Gráfico" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/funnel.js"></script>
+
+<div id="grafico" style="min-width: 410px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+    @if (Session["grafico"] != null)
+    {
+        if (Session["grafico"].Equals("gbb"))
+        {
+            int count = 1;
+            int cantidad = Model.GetUpperBound(0);
+            for (int i = 0; i <= cantidad; i++)
+            {
+                String name = Model[i, 0];
+                String y = Model[i, 1];
+                data = data + "{name: '" + name + "',  " + "y:" + y + ", " + "drilldown:' " + name + "'},";
+            }
+
+            <text>
+                <script>
+                    Highcharts.chart('grafico', {
+                chart: {
+                    type: 'column'
+                        },
+                        title: {
+                    text: 'Consulta de Cantidad de Personas por Tipo'
+                        },
+           
+                        xAxis: {
+                    type: 'category'
+                        },
+                        yAxis: {
+                    title: {
+                        text: 'Total de personas '
+                            }
+
+                },
+                        legend: {
+                    enabled: false
+                        },
+                        plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                                dataLabels: {
+                            enabled: true,
+                                    format: '{point.y:.1f}'
+                                }
+                    }
+                },
+
+                        tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+                        },
+
+                        series: [{
+                    name: 'Cantidad de Personas',
+                            colorByPoint: true,
+                            data: [  @Html.Raw(data)]
+                        }],
+
+                    });
+                </script>
+            </text>
+        }
+        else if (Session["grafico"].Equals("gpiramidei"))
+        {
+
+            int count = 1;
+            int cantidad = Model.GetUpperBound(0);
+            for (int i = 0; i <= cantidad; i++)
+            {
+                String name = Model[i, 0];
+                String y = Model[i, 1];
+                data = data + "[ '" + name + "',  " + y + "],";
+            }
+
+            <text>
+                <script>
+                    Highcharts.chart('grafico', {
+                chart: {
+                    type: 'funnel'
+                        },
+                        title: {
+                    text: 'Consulta de Cantidad de Personas por Tipo'
+                        },
+                        plotOptions: {
+                    series: {
+                        dataLabels: {
+                            enabled: true,
+                                    format: '<b>{point.name}</b> ({point.y:,.0f})',
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                    softConnector: true
+                                },
+                                center: ['40%', '50%'],
+                                neckWidth: '30%',
+                                neckHeight: '25%',
+                                width: '80%'
+                            }
+                },
+                        legend: {
+                    enabled: false
+                        },
+                        series: [{
+                    name: 'Cantidad de Personas',
+                            data: [ @Html.Raw(data) ]
+                        }]
+                    });
+                </script>
+            </text>
+        }
+    }

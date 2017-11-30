@@ -1,0 +1,106 @@
+﻿@model List<SistemaConcursoA.Models.Premio>
+
+@{    ViewBag.Title = "Index";
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+    var cont = 0;
+
+}
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/Premio/AgregarEditar/">Nuevo Premio</a>
+</div>
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "premio_id", ordenable: true },
+
+                    { leyenda: 'Concurso', style: 'width:200px;', columna: 'nombre', filtro: function () {
+                            return anexGrid_select({
+                                data: [
+                                    { valor: '', contenido: 'Todo' },
+                                    @foreach(var s in concurso)
+                                    {
+                                        <text>
+                                            { valor: '@s.concurso_id', contenido: '@s.nombre' },
+                                        </text>
+                                        cont++;
+                                    }
+                                ]
+                            });
+                        }
+                    },
+
+                    { leyenda: "Nombre Premio", columna: "nombrepremio", ordenable: true, filtro: true },
+                    { leyenda: "Descripcion", columna: "descripcion"},
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+
+                    { propiedad: "premio_id" },
+                    { propiedad: "nombre" },
+                    {
+                        propiedad: "nombrepremio", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Premio/AgregarEditar/")'
+                            + obj.premio_id, contenido: valor
+                            });
+                        }
+                    },
+                    { propiedad: "descripcion" },
+                      {
+                          formato: function (tr, obj, valor) {
+                              return anexGrid_link({
+                                  href: '@Url.Content("~/Backend/Premio/Ver/")'
+                              + obj.premio_id, contenido: "Detalle",
+                                  class: 'btn btn-xs btn-info'
+                              });
+                          }
+                      },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Premio/AgregarEditar/")'
+                            + obj.premio_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Premio/Eliminar/")'
+                            + obj.premio_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                 
+
+                 
+                ],
+
+                url: '@Url.Content("~/Backend/Premio/CargarGrilla/" )',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'premio_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

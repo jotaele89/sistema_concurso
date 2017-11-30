@@ -1,0 +1,103 @@
+﻿@model List<SistemaConcursoA.Models.Curso>
+@{
+    List<SistemaConcursoA.Models.Ciclo> ciclo = ViewBag.ciclo;
+    var plan_id = ViewBag.plan_id;
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/Curso/AgregarEditar/">Nuevo Curso</a>
+</div>
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "Código", columna: "curso_cod", ordenable: true },
+
+                    { leyenda: 'Ciclo', style: 'width:200px;', columna: 'nombre', filtro: function () {
+                            return anexGrid_select({
+                                data: [
+                                    { valor: '', contenido: 'Todo' },
+                                    @foreach(var s in ciclo)
+                                    {
+                                        <text>
+                                            { valor: '@s.ciclo_id', contenido: '@s.nombre' },
+                                        </text>
+                                    }
+                                ]
+                            });
+                        }
+                    },
+
+                    { leyenda: "Nombre del Curso", columna: "nombrecurso", ordenable: true , filtro: true},
+                    { leyenda: "Pre-Requisito", columna: "prerequisito"},
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+
+                    { propiedad: "curso_cod" },
+                    { propiedad: "nombre" },
+                    {
+                        propiedad: "nombrecurso", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Curso/AgregarEditar/")'
+                            + obj.curso_cod, contenido: valor
+                            });
+                        }
+                    },
+                    { propiedad: "prerequisito" },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Curso/Ver/")'
+                            + obj.curso_cod, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Curso/AgregarEditar/")'
+                            + obj.curso_cod, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Curso/Eliminar/")'
+                            + obj.curso_cod, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/Curso/CargarGrilla/" + plan_id)',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'curso_cod',
+                columna_orden: "DESC"
+            });
+    })
+</script>

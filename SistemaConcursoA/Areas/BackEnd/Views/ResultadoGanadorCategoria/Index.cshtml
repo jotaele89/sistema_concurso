@@ -1,0 +1,17 @@
+﻿@model List<SistemaConcursoA.Models.Evaluacion>
+@{
+
+}
+
+@using (Html.BeginForm("GenerarResultado", "ResultadoGanadorCategoria", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Resultados de las Evaluaciones</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Resultados de Ganadores" /><br />
+                <a href="~/BackEnd/ResultadoGanadorCategoria/VerResultados" class="btn btn-primary">Ver Resultados</a>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaConcursoA", "SistemaConcursoA\SistemaConcursoA.csproj", "{45051F93-96DC-4DF5-8428-481C33B5929C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45051F93-96DC-4DF5-8428-481C33B5929C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45051F93-96DC-4DF5-8428-481C33B5929C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45051F93-96DC-4DF5-8428-481C33B5929C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45051F93-96DC-4DF5-8428-481C33B5929C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://sistemaconcursoa.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SistemaConcursoA\\SistemaConcursoA.csproj
+		SccProjectName1 = SistemaConcursoA
+		SccLocalPath1 = SistemaConcursoA
+	EndGlobalSection
+EndGlobal

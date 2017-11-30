@@ -1,0 +1,103 @@
+﻿@model List<SistemaConcursoA.Models.RangoEvaluacion>
+@{
+    ViewBag.Title = "Index";
+    List<SistemaConcursoA.Models.Concurso> concurso = ViewBag.concurso;
+}
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary " href="~/Backend/RangoEvaluacion/AgregarEditar/">Nuevo Rango de Evaluacion</a>
+</div>
+<div id="Grilla" ></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "rango_id", ordenable: true },
+
+                    { leyenda: 'Concurso', style: 'width:200px;', columna: 'nombre', filtro: function () {
+                        return anexGrid_select({
+                            data: [
+                                { valor: '', contenido: 'Todo' },
+                                @foreach(var s in concurso)
+                            {
+                                    <text>
+                                        { valor: '@s.concurso_id', contenido: '@s.nombre' },
+                                    </text>
+                                    }
+                                ]
+                    });
+    }
+            },
+
+                    { leyenda: 'Nombre', style: 'width:200px;', columna: 'nombrera', ordenable: true },
+
+                    { leyenda: "Puntaje",  columna: "puntaje" },
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+
+                ],
+
+                modelo: [
+
+                    { propiedad: "rango_id" },
+                    { propiedad: "nombre" },
+                    {
+                        propiedad: "nombrera", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/RangoEvaluacion/AgregarEditar/")'
+                            + obj.rango_id, contenido: valor
+                            });
+                        }
+                    },
+
+                    { propiedad: "puntaje" },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/RangoEvaluacion/Ver/")'
+                            + obj.rango_id, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/RangoEvaluacion/AgregarEditar/")'
+                            + obj.rango_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/RangoEvaluacion/Eliminar/")'
+                            + obj.rango_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/RangoEvaluacion/CargarGrilla/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'rango_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

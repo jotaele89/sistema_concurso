@@ -1,0 +1,97 @@
+﻿@model SistemaConcursoA.Models.Documento
+
+
+@{
+    ViewBag.Title = "Archivo";
+    SistemaConcursoA.Models.Proyecto proyecto = ViewBag.proyecto;
+}
+
+<div class="page">
+    <h1 class="page-header">
+        Agregar Archivo
+    </h1>
+
+</div>
+@using (Html.BeginForm("GuardarDocumento", "Proyecto", FormMethod.Post))
+
+{
+
+    <div class="tab-content">
+        <div>
+            <div role="tabpanel" class="active">
+                <div class="form-group">
+                    <label>Proyecto:</label>
+                    <input name="proyecto" class="form-control" value="@proyecto.nombre_proyecto" disabled />
+                    <input name="proyecto_id" class="form-control" type="hidden" value="@proyecto.proyecto_id" />
+                </div>         
+                <div class="form-group">
+                    <label>Archivo:</label>
+                    <input type="file" name="rar" />
+                    <p class="help-block">EL ARCHIVO DEBE CONTENER DOCUMENTO, PROGRAMA, Y DIPTICO.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripcion del archivo:</label>
+                    @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control input-lg" })
+                    @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "label label-danger" })
+                   
+                </div>
+
+             @*   <div class="form-group">
+                    <label>Extension:</label>
+                    @Html.TextBoxFor(x => x.extension, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.extension, null, new { @class = "label label-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label>Tamaño:</label>
+                    @Html.TextBoxFor(x => x.tamanio, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tamanio, null, new { @class = "label label-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label>Estado:</label>
+                    @Html.TextBoxFor(x => x.estado, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.estado, null, new { @class = "label label-danger" })
+                </div>
+                *@
+            </div>
+
+        </div>
+
+    </div>
+    <br />
+
+    <div>
+        <button data-ajax="true" class="btn btn-success  btn-lg btn-block">Guardar</button>
+
+    </div>
+
+    <br />
+    <div class="form-group">
+        <a href="~/FrontEnd/Proyecto/Participante/@proyecto.proyecto_id" class="next btn btn-primary btn-lg btn-block">Regresar</a>
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <a href="~/Frontend/Proyecto/EliminarProyecto/@proyecto.proyecto_id" class="previous btn btn-danger btn-lg btn-block">Cancelar Registro</a>
+    </div>
+
+
+@*<div class="panel panel-default">
+    <div class="panel-heading">Documento</div>
+
+    @Html.Label("proyecto")
+    @Html.TextBoxFor(x => x.proyecto_id, new { @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.proyecto_id, null, new { @class = "label label-danger" })
+
+    <div class="panel-body">
+        <input type="file" name="rar" />
+
+
+    </div>
+</div>
+
+    *@
+}

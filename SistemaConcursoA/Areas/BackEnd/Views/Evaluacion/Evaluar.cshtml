@@ -1,0 +1,128 @@
+﻿@model SistemaConcursoA.Models.Evaluacion
+@{
+    List<SistemaConcursoA.Models.Criterio> criterio = ViewBag.criterio;
+    List<SistemaConcursoA.Models.RangoEvaluacion> rangoevaluacion = ViewBag.rangoevaluacion;
+    SistemaConcursoA.Models.Proyecto proy = ViewBag.proyecto;
+    SistemaConcursoA.Models.Proyecto proycat = ViewBag.proyectocategoria;
+    List<SistemaConcursoA.Models.Evaluacion> eva = ViewBag.verexiste;
+    List<SistemaConcursoA.Models.ProyectoEstudiante> integrantes = ViewBag.integrantes;
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Evaluacion/Index">Evaluacion</a></li>
+    <li class="active">@Model.evaluacion_id</li>
+</ol>
+
+@using (Html.BeginForm("Guardar", "Evaluacion", FormMethod.Post, new { id = "frm-planestudio" }))
+{
+    @Html.HiddenFor(x => x.evaluacion_id)
+    <input type="hidden" name="categoria_id" value="@proycat.categoria_id" />
+    <div class="panel panel-default">
+        <div class="panel-heading">Información a Detalle del Proyecto</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Nombre del Proyecto:</label>
+                <input type="text" name="nombre_proyecto" disabled value="@proy.nombre_proyecto" class="form-control" />
+                <input type="hidden" name="proyecto_id" value="@proy.proyecto_id" class="form-control" />
+                <input type="hidden" name="persona_id" value="@Convert.ToInt32(Session["persona_id"])" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Curso:</label>
+                <input type="text" name="curso" disabled value="@proy.Curso.nombre" class="form-control" />
+            </div>
+            <br />
+            <div class="panel panel-default">
+                <div class="panel-heading">Integrantes del Proyecto</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Código</th>
+                                <th style="width: 200px;">Nombre</th>
+                                <th style="width: 200px;">Apellido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in integrantes)
+                            {
+                                <tr>
+                                    <th>@m.Persona.codigo</th>
+                                    <th>@m.Persona.nombre</th>
+                                    <th>@m.Persona.apellido</th>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Criterios a Evaluar</div>
+        <div class="panel-body">
+            @if (eva.Count == 0)
+    {
+        foreach (var c in criterio)
+        {
+            var flag = false;
+            <div class="form-group">
+                <label>@c.nombre:</label>
+                <input type="hidden" name="criterio" value="@c.criterio_id" class="form-control" />
+                <select name="rangoevaluacion" class="form-control">
+                    @foreach (var p in rangoevaluacion)
+                    {
+                        <option value="@p.rango_id" class="form-control">@p.nombre, (Puntaje @p.puntaje)</option>
+                    }
+                </select>
+            </div>
+                }
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="~/BackEnd/Evaluacion" class="btn btn-danger">Cancelar</a>
+                </div>
+            }
+            else
+            {
+                foreach (var c in criterio)
+                {
+                    var flag = false;
+        <div class="form-group">
+            <label>@c.nombre:</label>
+            <input type="hidden" name="criterio" value="@c.criterio_id" disabled class="form-control" />
+            <select name="rangoevaluacion" class="form-control" disabled>
+                @foreach (var p in rangoevaluacion)
+                {
+                    var tomado = false;
+                    if (!flag)
+                    {
+                        foreach (var s in eva)
+                        {
+                            if (c.criterio_id == s.criterio_id)
+                            {
+                                if (p.rango_id == s.rango_id)
+                                {
+                                    tomado = true;
+                                    flag = true;
+                                    <option @(tomado ? "selected" : "") disabled value="@p.rango_id" class="form-control">@p.nombre, (Puntaje @p.puntaje)</option>
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <option value="@p.rango_id" disabled class="form-control">@p.nombre, (Puntaje @p.puntaje)</option>
+                    }
+                }
+            </select>
+        </div>
+                }
+                <div class="text-right">
+                    <a href="~/BackEnd/Evaluacion" class="btn btn-danger">Atrás</a>
+                </div>
+            }
+        </div>
+    </div>
+}

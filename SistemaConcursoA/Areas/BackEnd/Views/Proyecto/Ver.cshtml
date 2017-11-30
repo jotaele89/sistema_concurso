@@ -1,0 +1,135 @@
+﻿@model SistemaConcursoA.Models.Proyecto
+@{
+    List<SistemaConcursoA.Models.OrdenProyecto> ordenproyecto = ViewBag.ordenproyecto;
+    List<SistemaConcursoA.Models.ProyectoEstudiante> proyectoparticipante = ViewBag.proyectoparticipante;
+    List<SistemaConcursoA.Models.Documento> documentoproyecto = ViewBag.documentoproyecto;
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Proyecto/Index/">Proyecto</a></li>
+    <li class="active">@Model.nombre_proyecto</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada del Proyecto</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.proyecto_id</dd>
+            <dt>Concurso:</dt>
+            <dd>@Model.Concurso.nombre</dd>
+            <dt>Curso:</dt>
+            <dd>@Model.Curso.nombre</dd>
+            <dt>Categoría:</dt>
+            <dd>@Model.Categoria.nombre</dd>
+            <dt>Nombre del Proyecto:</dt>
+            <dd>@Model.nombre_proyecto</dd>
+            <dt>Fecha de Registro:</dt>
+            <dd>@Model.fecharegistro</dd>
+            <dt>Hora de Registro:</dt>
+            <dd>@Model.horaregistro</dd>
+            <dt>Estado:</dt>
+            <dd>@Model.estado</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Orden y Hora de Exposición</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Nombre del Proyecto</th>
+                    <th style="width: 200px;">Orden de Exposición</th>
+                    <th style="width: 200px;">Hora de Exposición</th>
+                    <th style="width: 200px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+               @foreach (var m in ordenproyecto)
+               {
+                <tr>
+                    <th>@Model.nombre_proyecto</th>
+                    <th>@m.orden</th>
+                    <th>@m.horaexposicion</th>
+                    <th>@m.estado</th>
+                </tr>
+               }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Participantes del Proyecto</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Código</th>
+                    <th style="width: 200px;">Nombre</th>
+                    <th style="width: 200px;">Apellido</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in proyectoparticipante)
+                {
+                    <tr>
+                        <th>@m.Persona.codigo</th>
+                        <th>@m.Persona.nombre</th>
+                        <th>@m.Persona.apellido</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Documento del Proyecto</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Nombre del Documento</th>
+                    <th style="width: 200px;">Descripción</th>
+                    <th style="width: 200px;">Extensión</th>
+                    <th style="width: 200px;">Tamaño</th>
+                    <th style="width: 200px;">Descargar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in documentoproyecto)
+                {
+                    <tr>
+                        <th>@m.nombre</th>
+                        <th>@m.descripcion</th>
+                        <th>@m.extension</th>
+                        <th>@m.tamanio</th>
+                        @try
+                        {
+                            string value = m.nombre;
+                            char delimiter = '.';
+                            string[] substrings = value.Split(delimiter);
+                            foreach (var substring in substrings)
+                            {
+                                using (Html.BeginForm("Descargar", "Proyecto", FormMethod.Post, new { id = "frm-proyecto" }))
+                                {
+                                    <th><input type="hidden" name="nombrearchivo" value="@substring" /><input type="submit" class="btn btn-success" value="Descargar"/></th>
+                                }
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

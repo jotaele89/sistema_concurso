@@ -1,0 +1,80 @@
+﻿@model SistemaConcursoA.Models.Persona
+@{
+    List<SistemaConcursoA.Models.CategoriaJurado> categoriajurado = ViewBag.categoriajurado;
+    List<SistemaConcursoA.Models.Usuario> usuariojurado = ViewBag.usuariojurado;
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Jurado/Index">Jurado</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada del Jurado</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.persona_id</dd>
+            <dt>Código:</dt>
+            <dd>@Model.codigo</dd>
+            <dt>Nombre:</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Apellido:</dt>
+            <dd>@Model.apellido</dd>
+            <dt>DNI:</dt>
+            <dd>@Model.dni</dd>
+            <dt>Email:</dt>
+            <dd>@Model.email</dd>
+            <dt>Teléfono/Celular:</dt>
+            <dd>@Model.celular</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Usuario</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 200px;">Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in usuariojurado)
+                {
+                    <tr>
+                        <th>@m.usuario_id</th>
+                        <th>@m.nombre</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Categoría Perteneciente</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 200px;">Categoría</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in categoriajurado)
+                {
+                    <tr>
+                        <th>@m.Categoria.categoria_id</th>
+                        <th>@m.Categoria.nombre</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

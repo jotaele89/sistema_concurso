@@ -1,0 +1,27 @@
+﻿@model SistemaConcursoA.Models.TipoUsuario
+@{
+    ViewBag.Title = "Ver";
+}
+
+<h2>Ver</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/TipoUsuario/Index">TipoUsuario</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada de tipo usuario</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID</dt>
+            <dd>@Model.tipousuario_id</dd>
+            <dt>Tipo Usuario</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Descripcion</dt>
+            <dd>@Model.descripcion</dd>
+
+        </dl>
+
+    </div>
+</div>
+

@@ -1,0 +1,81 @@
+﻿
+@model SistemaConcursoA.Models.Semestre
+@{
+    ViewBag.Title = (Model.semestre_id > 0 ? Model.nombre : "Nuevo registro");
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Semestre/Index">Semestres</a></li>
+    <li class="active">@Model.semestre_id</li>
+
+</ol>
+
+@using (Html.BeginForm("Guardar", "Semestre", FormMethod.Post, new { id = "frm_semestre" }))
+{
+    @Html.HiddenFor(x => x.semestre_id)
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del semestre</div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.semestre_id)
+                @Html.TextBoxFor(x => x.semestre_id, new { @class = "form-control", disabled = true })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.nombre)
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "label label-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.anio)
+                @Html.TextBoxFor(x => x.anio, new { @class = "form-control", @type="number"})
+                @Html.ValidationMessageFor(x => x.anio, null, new { @class = "label label-danger" })
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.fechainicio)
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fechainicio);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="fechainicio" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.fechafin)
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fechafin);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="fechafin" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/Backend/Semestre" class="btn btn-danger">Cancelar</a>
+    </div>
+}
+

@@ -1,0 +1,210 @@
+﻿@model List<SistemaConcursoA.Models.Categoria>
+@{
+    string data_serie = "";
+    string data_categoria = "";
+    string data_valor = "";
+    string data_valores = "";
+    string prueba = "";
+    List<SistemaConcursoA.Models.ResultadoGanadorCategoria> puntaje = ViewBag.puntaje;
+    List<SistemaConcursoA.Models.Semestre> semestre = ViewBag.semestre;
+
+    List<SistemaConcursoA.Models.Evaluacion> evaluacion = ViewBag.evaluacion;
+    List<SistemaConcursoA.Models.Proyecto> proyecto = ViewBag.proyecto;
+
+    SistemaConcursoA.Models.Concurso con = new SistemaConcursoA.Models.Concurso();
+    System.Collections.ArrayList categorias = con.listarcategorias();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Consulta de Cantidad de Proyectos por Jurado</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta12", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Gráficos Estadísticos</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione el Gráfico:</label>
+                <select name="grafico" class="form-control">
+                    <option selected value="gbarra">Gráfico de Barras</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Gráfico" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/assets/js/highcharts/exporting.js"></script>
+<script src="~/assets/js/highcharts/highcharts-3d.js"></script>
+<script src="~/assets/js/highcharts/highcharts.js"></script>
+<script src="~/assets/js/highcharts/offline-exporting.js"></script>
+
+<div id="grafico"></div>
+@if (Session["grafico"] != null)
+{
+    if (Session["grafico"].Equals("gbarra"))
+    {
+        data_serie = "";
+        data_categoria = "";
+        data_valor = "";
+        data_valores = "";
+
+        foreach (var co in semestre)
+        {
+            data_categoria = data_categoria + "'" + co.nombre + "',";
+        }
+
+        @**@
+foreach (var e in proyecto)
+{
+    var flag = false;
+    var puntajetotal = 0;
+    foreach (var d in evaluacion)
+    {
+        if (e.proyecto_id == d.proyecto_id)
+        {
+            flag = true;
+            break;
+        }
+    }
+    if (flag)
+    {
+
+        foreach (var m in evaluacion)
+        {
+            if (e.proyecto_id == m.proyecto_id)
+            {
+
+                puntajetotal = puntajetotal + m.RangoEvaluacion.puntaje;
+
+            }
+        }
+
+        prueba = prueba + puntajetotal;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        @**@
+foreach (var ca in categorias)
+{
+    data_serie = data_serie + "{name: '" + ca + "', ";
+    foreach (var co in semestre)
+    {
+        var flag = false;
+        var flag1 = false;
+        foreach (var i in Model)
+        {
+            if (i.Concurso.semestre_id == co.semestre_id)
+            {
+                if (ca.Equals(i.nombre))
+                {
+                    //data_serie = data_serie + "{name: '" + c.nombre + "', ";
+                    data_valor = " data: [";
+                    if (i.Concurso.semestre_id == co.semestre_id)
+                    {
+                        SistemaConcursoA.Models.Concurso cantidadproy = new SistemaConcursoA.Models.Concurso();
+
+                        int cant = cantidadproy.obtenercantproy(i.Concurso.semestre_id, i.categoria_id);
+
+                        data_valores = data_valores + cant + ", ";
+                        flag = true;
+                        flag1 = true;
+                    }
+                    if (!flag)
+                    {
+                        data_valores = data_valores + "0, ";
+                        flag = false;
+                    }
+                }
+            }
+        }
+
+        if (!flag1)
+        {
+            data_valores = data_valores + "0, ";
+            flag1 = false;
+        }
+    }
+
+    data_valor = data_valor + data_valores + "]";
+    data_valores = "";
+    data_serie = data_serie + data_valor + "}, ";
+  
+}
+
+@prueba;
+@data_categoria;
+     <text>
+
+<script>Highcharts.chart('container', {
+    title: {
+        text: 'Combination chart'
+    },
+    xAxis: {
+        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+    },
+    labels: {
+        items: [{
+            html: 'Total fruit consumption',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+            }
+        }]
+    },
+    series: [{
+        type: 'column',
+        name: 'Jane',
+        data: [3, 2, 1, 3, 4]
+    }, {
+        type: 'column',
+        name: 'John',
+        data: [2, 3, 5, 7, 6]
+    }, {
+        type: 'column',
+        name: 'Joe',
+        data: [4, 3, 3, 9, 0]
+    }, {
+        type: 'spline',
+        name: 'Average',
+        data: [3, 2.67, 3, 6.33, 3.33],
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
+    }]
+});
+
+            </script>
+        </text>
+    }
+    else if (Session["grafico"].Equals("garea"))
+    {
+
+    }
+}
+

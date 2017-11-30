@@ -1,0 +1,120 @@
+﻿@model List<SistemaConcursoA.Models.Concurso>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/Concurso/AgregarEditar/">Nuevo Concurso</a>
+</div>
+<div id="Grilla"></div>
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+                    //columna1
+                    { leyenda: "ID", columna: "concurso_id", ordenable: true },
+                    //columna2
+                    { leyenda: "Semestre", columna: "nombresemestre", ordenable: true },
+                    //columna3
+                    { leyenda: "Plan de Estudios", columna: "nombreplan", ordenable: true },
+                    //columna4
+                    { leyenda: "Concurso", style: 'width:200px;', columna: 'nombre', ordenable: true, filtro: true },
+                    //columna5
+
+
+                    { leyenda: "Fecha inicio", columna: "fechaconcursoinicioregistro", ordenable: true },
+
+                    { leyenda: "Fecha fin ", columna: "fechaconcursofinregistro", ordenable: true },
+
+
+                    //columna5
+                    { leyenda: "Estado", columna: "ESTADO", ordenable: true },
+
+                    //columnas para los botones
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+                    //atributo 1 semestre_id
+                    { propiedad: "concurso_id" },
+                      //atributo 1 semestre_id
+                    { propiedad: "nombresemestre" },
+                      //atributo 1 semestre_id
+                    { propiedad: "nombreplan" },
+
+                    //atributo 2  nombre
+                    {
+                        propiedad: "nombre", formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Concurso/AgregarEditar/")'
+                            + obj.usuario_id, contenido: valor
+                            });
+                        }
+                    },
+                    //atributo 3 anio
+
+
+                      {
+                          propiedad: 'fechaconcursoinicioregistro', class: 'center', formato: function (tr, obj, valor)
+                          { return moment(valor).format("DD/MM/YYYY"); }
+                      },
+                      //atributo 5 fechafin
+
+                      {
+                          propiedad: 'fechaconcursofinregistro', class: 'center', formato: function (tr, obj, valor)
+                          { return moment(valor).format("DD/MM/YYYY"); }
+                      },
+
+                    //atributo 5 fechafin
+                    { propiedad: "ESTADO" },
+
+                    //los botones
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Concurso/Ver/")'
+                            + obj.concurso_id, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Concurso/AgregarEditar/")'
+                            + obj.concurso_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Concurso/Eliminar/")'
+                            + obj.concurso_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/Concurso/CargarGrilla/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'concurso_id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

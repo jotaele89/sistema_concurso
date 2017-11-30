@@ -1,0 +1,35 @@
+﻿@model SistemaConcursoA.Models.Persona
+@{
+
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Persona/Index/">Persona</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información de la Persona</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.persona_id</dd>
+            <dt>tipo de persona:</dt>
+            <dd>@Model.TipoPersona.nombre</dd>
+            <dt>dni:</dt>
+            <dd>@Model.dni  </dd>
+            <dt>nombre:</dt>
+            <dd>@Model.nombre</dd>
+            <dt>apellido:</dt>
+            <dd>@Model.apellido</dd>
+            <dt>email:</dt>
+            <dd>@Model.email</dd>
+            <dt>celular:</dt>
+            <dd>@Model.celular</dd>
+            <dt>estado:</dt>
+            <dd>@Model.estado</dd>
+        </dl>
+    </div>
+</div>

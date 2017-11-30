@@ -1,0 +1,71 @@
+﻿@model SistemaConcursoA.Models.ProyectoEstudiante
+@{
+    ViewBag.Title = "Participante";
+    // List<SistemaConcursoA.Models.Proyecto> proyecto = ViewBag.proyecto;
+    SistemaConcursoA.Models.Proyecto proyecto = ViewBag.proyecto;
+    List<SistemaConcursoA.Models.ProyectoEstudiante> persona = ViewBag.persona;
+}
+
+
+
+    <div class="panel-heading text-center text-uppercase" >REGISTRAR PARTICIPANTES</div>
+
+  
+     @using (Html.BeginForm("GuardarParticipante", "Proyecto", FormMethod.Post, new { id = "frm-proyecto" }))
+     {
+            <div class="form-group">
+                <label>Proyecto:</label>
+                <input name="proyecto" class="form-control" value="@proyecto.nombre_proyecto" disabled />
+                <input name="proyecto_id" class="form-control" type="hidden" value="@proyecto.proyecto_id" />
+            </div>
+            <div class="form-group">
+     
+                <input type="text" name="codigo" class="form-control" placeholder="CÓDIGO DE ESTUDIANTE"/>
+            </div>
+
+            <div class="form-group">
+                <input type="submit"class="btn-success "  value="AGREGAR"/>
+            </div>
+
+            <br />
+     }
+@if (persona.Count != 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Integrantes del Proyecto</div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Código</th>
+                        <th style="width: 200px;">Nombre</th>
+                        <th style="width: 200px;">Apellido</th>
+                        <th style="width: 200px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in persona)
+                    {
+                        <tr>
+                            <th>@i.Persona.codigo</th>
+                            <th>@i.Persona.nombre</th>
+                            <th>@i.Persona.apellido</th>
+                            <th><a href="~/FrontEnd/Proyecto/EliminarIntegrante/@i.Persona.persona_id" class="btn btn-danger">Eliminar</a></th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<br />
+<div class="form-group">
+    <a href="~/FrontEnd/Proyecto/Archivo/@proyecto.proyecto_id" class="btn btn- btn-primary btn-lg btn-block">Documentación</a>
+</div>
+
+
+
+<div class="form-group">
+    <a href="~/Frontend/Proyecto/EliminarProyecto/@proyecto.proyecto_id" class="btn btn-danger btn-lg btn-block">Cancelar Proyecto</a>
+</div>

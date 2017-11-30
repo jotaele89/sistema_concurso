@@ -1,0 +1,270 @@
+﻿@model List<SistemaConcursoA.Models.Categoria>
+@{
+    string data_serie = "";
+    string data_categoria = "";
+    string data_valor = "";
+    string data_valores = "";
+
+    string data_linea = "";
+    string data_valorlinea = "";
+    string data_serie_linea = "";
+    string data_valorescat = "";
+    List<SistemaConcursoA.Models.ResultadoGanadorCategoria> puntaje = ViewBag.puntaje;
+    List<SistemaConcursoA.Models.Semestre> semestre = ViewBag.semestre;
+    SistemaConcursoA.Models.Concurso con = new SistemaConcursoA.Models.Concurso();
+    System.Collections.ArrayList categorias = con.listarcategorias();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">Consulta de Cantidad de Proyectos por Categoría de Semestres</div>
+</div>
+
+@using (Html.BeginForm("Index", "Consulta10", FormMethod.Post, new { criterio = "frm-buscar" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Gráficos Estadísticos</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccione el Gráfico:</label>
+                <select name="grafico" class="form-control">
+                    <option selected value="gbarra">Gráfico de Barras</option>
+                    <option  value="gbarraline">Gráfico de Barras 2 </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Generar Gráfico" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/assets/js/highcharts/exporting.js"></script>
+<script src="~/assets/js/highcharts/highcharts-3d.js"></script>
+<script src="~/assets/js/highcharts/highcharts.js"></script>
+<script src="~/assets/js/highcharts/offline-exporting.js"></script>
+
+<div id="grafico"></div>
+@if (Session["grafico"] != null)
+{
+    if (Session["grafico"].Equals("gbarra"))
+    {
+        data_serie = "";
+        data_categoria = "";
+        data_valor = "";
+        data_valores = "";
+
+        foreach (var co in semestre)
+        {
+            data_categoria = data_categoria + "'" + co.nombre + "',";
+        }
+
+        foreach (var ca in categorias)
+        {
+            data_serie = data_serie + "{name: '" + ca + "', ";
+            foreach (var co in semestre)
+            {
+                var flag = false;
+                var flag1 = false;
+                foreach (var i in Model)
+                {
+                    if (i.Concurso.semestre_id == co.semestre_id)
+                    {
+                        if (ca.Equals(i.nombre))
+                        {
+                            //data_serie = data_serie + "{name: '" + c.nombre + "', ";
+                            data_valor = " data: [";
+                            if (i.Concurso.semestre_id == co.semestre_id)
+                            {
+                                SistemaConcursoA.Models.Concurso cantidadproy = new SistemaConcursoA.Models.Concurso();
+
+                                int cant = cantidadproy.obtenercantproy(i.Concurso.semestre_id,i.categoria_id);
+
+                                data_valores = data_valores + cant + ", ";
+                                flag = true;
+                                flag1 = true;
+                            }
+                            if (!flag)
+                            {
+                                data_valores = data_valores + "0, ";
+                                flag = false;
+                            }
+                        }
+                    }
+                }
+
+                if (!flag1)
+                {
+                    data_valores = data_valores + "0, ";
+                    flag1 = false;
+                }
+            }
+
+            data_valor = data_valor + data_valores + "]";
+            data_valores = "";
+            data_serie = data_serie + data_valor + "}, ";
+        }
+
+        <text>
+            <script>
+        Highcharts.chart('grafico', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Consulta de Cantidad de Proyectos por Categoría de Semestres'
+        },
+        xAxis: {
+            categories: [
+                @Html.Raw(data_categoria)
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [@Html.Raw(data_serie)]
+        });
+            </script>
+        </text>
+    }
+
+
+
+    else if (Session["grafico"].Equals("gbarraline"))
+    {
+        data_serie = "";
+        data_categoria = "";
+        data_valor = "";
+        data_valores = "";
+        data_linea = "";
+        data_valorlinea = "";
+        data_serie_linea = "";
+        data_valorescat = "";
+        foreach (var co in semestre)
+        {
+            data_categoria = data_categoria + "'" + co.nombre + "',";
+        }
+
+        foreach (var ca in categorias)
+        {
+            data_serie = data_serie + "{type: 'column', name: '" + ca + "', ";
+            data_linea = data_linea + "{type: 'spline', name:'promedio', ";
+            foreach (var co in semestre)
+            {
+                var flag = false;
+                var flag1 = false;
+                foreach (var i in Model)
+                {
+                    if (i.Concurso.semestre_id == co.semestre_id)
+                    {
+                        if (ca.Equals(i.nombre))
+                        {
+                            //data_serie = data_serie + "{name: '" + c.nombre + "', ";
+                            data_valor = " data: [";
+                            data_valorlinea = " data: [";
+                            if (i.Concurso.semestre_id == co.semestre_id)
+                            {
+                                SistemaConcursoA.Models.Concurso cantidadproy = new SistemaConcursoA.Models.Concurso();
+
+                                int cant = cantidadproy.obtenercantproy(i.Concurso.semestre_id, i.categoria_id);
+                                int cantcat = cantidadproy.obtenercantcategoria(i.Concurso.semestre_id, i.categoria_id);
+                                data_valores = data_valores + cant + ", ";
+                                data_valorescat = data_valorescat + cant / cantcat + ", ";
+                                flag = true;
+                                flag1 = true;
+                            }
+                            if (!flag)
+                            {
+                                data_valores = data_valores + "0, ";
+                                data_valorescat = data_valorescat + "0, ";
+                                flag = false;
+                            }
+                        }
+                    }
+                }
+
+                if (!flag1)
+                {
+                    data_valores = data_valores + "0, ";
+                    flag1 = false;
+                }
+            }
+
+            data_valor = data_valor + data_valores + "]";
+
+            data_valorlinea = data_valorlinea + data_valorescat + "], marker:{ lineWidth:" + 2 + " ,lineColor: Highcharts.getOptions().colors[" + 3 + " ],  fillColor: 'white'}";
+            data_valores = "";
+            data_serie = data_serie + data_valor + "}, ";
+            data_linea = data_linea + data_valorlinea + "}, ";
+
+        }
+
+        @(data_serie_linea)
+
+        <text>
+            <script>
+      Highcharts.chart('grafico', {
+        title: {
+            text: 'Combination chart'
+            },
+    xAxis: {
+            categories: [  @Html.Raw(data_categoria)]
+    },
+    labels: {
+            items: [{
+                html: 'Total fruit consumption',
+            style: {
+                    left: '50px',
+                top: '18px',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+            }
+                }]
+    },
+    series: [@Html.Raw(data_serie) @Html.Raw(data_linea){
+        type: 'pie',
+name: 'Total consumption',
+data: [{
+    name: 'Jane',
+    y: 13,
+    color: Highcharts.getOptions().colors[0] // Jane's color
+}, {
+    name: 'John',
+    y: 23,
+    color: Highcharts.getOptions().colors[1] // John's color
+}, {
+    name: 'Joe',
+    y: 19,
+    color: Highcharts.getOptions().colors[2] // Joe's color
+}],
+center: [100, 80],
+size: 100,
+showInLegend: false,
+dataLabels: {
+    enabled: false
+}
+}]
+});
+            </script>
+        </text>
+    }
+
+}
+@(data_linea)
+

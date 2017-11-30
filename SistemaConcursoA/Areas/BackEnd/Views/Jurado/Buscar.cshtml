@@ -1,0 +1,23 @@
+﻿@model SistemaConcursoA.Models.Persona
+@{
+
+}
+
+<h2>Buscar Persona</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Jurado/Index">Jurado</a></li>
+</ol>
+
+@using (Html.BeginForm("Buscar", "Jurado", FormMethod.Post, new { criterio = "frm-buscar" }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">Buscar Persona</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label>Buscar Persona:</label>
+                        <input type="text" placeholder="Buscar por DNI, Código o Nombres" class="form-control" name="criterio" /><br />
+                        <input type="submit" class="btn btn-success" value="Buscar" />
+                    </div>
+                </div>
+            </div>
+}

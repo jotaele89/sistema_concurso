@@ -1,0 +1,12 @@
+﻿@{
+    Layout = null;
+}
+
+<h3>Redireccionando...</h3>
+
+<script>
+    var str = location.pathname;
+    var res = str.split('/');
+
+    location = res[0] + '/FrontEnd/Home';
+</script>

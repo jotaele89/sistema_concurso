@@ -1,0 +1,122 @@
+﻿@model List<SistemaConcursoA.Models.Evaluacion>
+@{
+    List<SistemaConcursoA.Models.Evaluacion> evaluacion = ViewBag.evaluacion;
+    List<SistemaConcursoA.Models.CategoriaJurado> categoriajurado = ViewBag.categoriajurado;
+    List<SistemaConcursoA.Models.Proyecto> proyecto = ViewBag.proyecto;
+    SistemaConcursoA.Models.ResultadoEvaluacion penalidad = ViewBag.penalidad;
+    var puntajetotal_j1 = 0;
+    var puntajetotal_j2 = 0;
+    var puntajetotal_j3 = 0;
+    var cont = 1;
+}
+
+<div class="panel panel-success">
+    <div class="panel-heading">Ficha de Evaluacion del Proyecto</div>
+</div>
+
+@foreach (var e in categoriajurado)
+{
+    var flag = false;
+    var puntajetotal = 0;
+    var persona = e.persona_id;
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Jurado: @e.Persona.nombre @e.Persona.apellido</div>
+    </div>
+
+        foreach (var p in proyecto)
+        {
+        foreach (var d in evaluacion)
+        {
+        if (p.proyecto_id == d.proyecto_id)
+        {
+        flag = true;
+        break;
+        }
+        }
+        if (flag && persona != 0)
+        {
+        <div class="panel panel-default">
+            <div class="panel-heading">Ficha de Evaluación: @p.nombre_proyecto</div>
+            <div class="panel-heading">Categoría: @e.Categoria.nombre</div>
+            <div class="panel-heading">Curso: @p.Curso.nombre</div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Criterio</th>
+                            <th style="width: 200px;">Puntaje</th>
+                            <th style="width: 200px;">Puntaje Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in evaluacion)
+                        {
+                                if (Convert.ToInt32(Session["id_proyecto"].ToString()) == m.proyecto_id)
+                                {
+                                    if (e.persona_id == m.persona_id)
+                                    {
+                                    <tr>
+                                        <th>@m.Criterio.nombre</th>
+                                        <th>@m.RangoEvaluacion.puntaje</th>
+                                    </tr>
+                                    if(cont==1)
+                                    {
+                                        puntajetotal = puntajetotal + m.RangoEvaluacion.puntaje;
+                                        puntajetotal_j1 = puntajetotal_j1 + m.RangoEvaluacion.puntaje;
+                                    }
+                                    else if(cont == 2)
+                                    {
+                                        puntajetotal = puntajetotal + m.RangoEvaluacion.puntaje;
+                                        puntajetotal_j2 = puntajetotal_j2 + m.RangoEvaluacion.puntaje;
+                                    }
+                                    else if(cont == 3)
+                                    {
+                                        puntajetotal = puntajetotal + m.RangoEvaluacion.puntaje;
+                                        puntajetotal_j3 = puntajetotal_j3 + m.RangoEvaluacion.puntaje;
+                                    }
+                                }
+                            }
+                        }
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>@puntajetotal</th>
+                        </tr>
+                        @try
+                        {
+                            persona = 0;
+                            puntajetotal = 0;
+                            cont++;
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    }
+}
+
+<br />
+<br />
+<div class="panel panel-info">
+    <div class="panel-heading text-right"><b>Sub Total:</b> @(puntajetotal_j1 + puntajetotal_j2 + puntajetotal_j3)</div>
+</div>
+<div class="panel panel-warning">
+    <div class="panel-heading text-right"><b>Puntaje Sub Total (Entre los 3 jurados):</b> @(((puntajetotal_j1 + puntajetotal_j2 + puntajetotal_j3) / 3))</div>
+</div>
+
+ @try { penalidad.penalidad = penalidad.penalidad; }
+    catch (Exception e) { penalidad = new SistemaConcursoA.Models.ResultadoEvaluacion(); penalidad.penalidad = 0; }
+
+<div class="panel panel-danger">
+    <div class="panel-heading text-right"><b>Penalidad:</b> @try { @penalidad.penalidad }
+    catch (Exception e) { }</div>
+</div>
+<div class="panel panel-success">
+    <div class="panel-heading text-right"><b>Puntaje Total:</b> @(((puntajetotal_j1 + puntajetotal_j2 + puntajetotal_j3) / 3) - @penalidad.penalidad)</div>
+</div>

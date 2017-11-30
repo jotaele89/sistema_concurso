@@ -1,0 +1,81 @@
+﻿@model List<SistemaConcursoA.Models.Persona>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="well well-sm text-right">
+    <a class="btn btn-primary" href="~/Backend/Jurado/Buscar/">Nuevo Jurado</a>
+</div>
+<div id="Grilla"></div>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#Grilla").anexGrid(
+            {
+                columnas: [
+
+                    { leyenda: "ID", columna: "persona_id" },
+
+                    { leyenda: "Apellido", columna: "apellido", ordenable: true, filtro: true },
+
+                    { leyenda: "Nombre", columna: "nombre", ordenable: true, filtro: true },
+
+                    { leyenda: "Usuario", columna: "usuario"},
+
+                    { style: "width: 80px;" },//boton detalle
+                    { style: "width: 80px;" },//boton modificar
+                    { style: "width: 80px;" },//boton eliminar
+                ],
+
+                modelo: [
+
+                    { propiedad: "persona_id" },
+                    { propiedad: "apellido" },
+                    { propiedad: "nombre" },
+                    { propiedad: "usuario" },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Jurado/Ver/")'
+                            + obj.persona_id, contenido: "Detalle",
+                                class: 'btn btn-xs btn-info'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Jurado/AgregarEditar/")'
+                            + obj.persona_id, contenido: "Modificar",
+                                class: 'btn btn-xs btn-warning'
+                            });
+                        }
+                    },
+
+                    {
+                        formato: function (tr, obj, valor) {
+                            return anexGrid_link({
+                                href: '@Url.Content("~/Backend/Jurado/Eliminar/")'
+                            + obj.persona_id, contenido: "Eliminar",
+                                class: 'btn btn-xs btn-danger',
+                                attr: [
+                                    'onclick="return confirm(\'¿Estás seguro de eliminar...?\')"'
+                                ]
+                            });
+                        },
+                    }
+                ],
+
+                url: '@Url.Content("~/Backend/Jurado/CargarGrillaJurado/")',
+                filtrable: true,
+                paginable: true, //para mostrar la paginación
+                limite: [10, 20, 50, 100], //para mostrar un combobox donde se muestra la cantidad de registros por pagina
+                columna: 'id',
+                columna_orden: "DESC"
+            });
+    })
+</script>

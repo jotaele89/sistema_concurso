@@ -1,0 +1,203 @@
+﻿@model SistemaConcursoA.Models.Concurso
+@{
+    ViewBag.Title = (Model.concurso_id > 0 ? Model.nombre : "Nuevo Registro");
+    List<SistemaConcursoA.Models.Semestre> semestre = ViewBag.semestre;
+    List<SistemaConcursoA.Models.PlanEstudio> plan = ViewBag.plan;
+}
+
+<h2>Agregar / Editar</h2>
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Concurso/Index">Concurso</a></li>
+    <li class="active">@Model.concurso_id</li>
+</ol>
+
+@using (Html.BeginForm("Guardar", "Concurso", FormMethod.Post, new { id = "frm_concurso" }))
+{
+    @Html.HiddenFor(x => x.concurso_id)
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Información del Concurso</div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.LabelFor(x => x.concurso_id)
+                @Html.TextBoxFor(x => x.concurso_id, new { @class = "form-control", @disabled = true })
+
+            </div>
+
+
+            <div class="form-group">
+                <label>Semestre:</label>
+                <select name="semestre_id" class="form-control">
+                    @foreach (var p in semestre)
+                    {
+                        <option @(Model.semestre_id.Equals(p.semestre_id) ? "selected" : "") value="@p.semestre_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Plan de estudios:</label>
+                <select name="plan_id" class="form-control">
+                    @foreach (var p in plan)
+                    {
+                        <option @(Model.plan_id.Equals(p.plan_id) ? "selected" : "") value="@p.plan_id" class="form-control">@p.nombre</option>
+                    }
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label>Nombre del Concurso:</label>
+                @Html.TextBoxFor(x => x.nombre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.nombre, null, new { @class = "label label-danger" })
+
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                @Html.TextBoxFor(x => x.descripcion, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.descripcion, null, new { @class = "label label-danger" })
+
+            </div>
+            <div class="form-group">
+                <label>Fecha de concurso:</label>
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fechaconcurso);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="fechaconcurso" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Hora de inicio del concurso:</label>
+                @try
+                {
+                    //System.DateTime dt;
+                    //dt = Convert.ToDateTime(Model.horainicio);
+
+                    //string hora;
+                    //hora = dt.ToString("HH:mm:ss");
+
+                    <input type="time" name="horainicio" value="@Model.horainicio" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+
+            <div class="form-group">
+                <label>Fecha de inicio de concurso:</label>
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fechaconcursoinicioregistro);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="fechaconcursoinicioregistro" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de fin de concurso:</label>
+                @try
+                {
+                    System.DateTime dt;
+                    dt = Convert.ToDateTime(Model.fechaconcursofinregistro);
+
+                    string fecha;
+                    fecha = dt.ToString("yyyy-MM-dd");
+
+                    <input type="date" name="fechaconcursofinregistro" value="@fecha" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Hora de inicio del registro:</label>
+                @try
+                {
+                    //System.DateTime dt;
+                    //dt = Convert.ToDateTime(Model.horainicioregistro);
+
+                    //string hora;
+                    //hora = dt.ToString("HH:mm:ss");
+
+                    <input type="time" name="horainicioregistro" value="@Model.horainicioregistro" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+            <div class="form-group">
+                <label>Hora de fin del registro:</label>
+                @try
+                {
+                    //System.DateTime dt;
+                    //dt = Convert.ToDateTime(Model.horafinregistro);
+
+                    //string hora;
+                    //hora = dt.ToString("HH:mm:ss");
+
+                    <input type="time" name="horafinregistro" value="@Model.horafinregistro" class="form-control" />
+                }
+                catch (Exception e)
+                {
+
+                }
+            </div>
+
+
+
+            <div class="form-group">
+                <label>Tiempo de exposicion:</label>
+                @Html.TextBoxFor(x => x.tiempoexposicion, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.tiempoexposicion, null, new { @class = "label label-danger" })
+
+            </div>
+
+
+            <div class="form-group">
+                <label>Estado:</label>
+                @{
+                    List<SelectListItem> estado = new List<SelectListItem>();
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Activo",
+                        Value = "Activo"
+                    });
+                    estado.Add(new SelectListItem
+                    {
+                        Text = "Inactivo",
+                        Value = "Inactivo",
+                    });
+                }
+                @Html.DropDownListFor(x => x.ESTADO, estado, "Seleccione", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="~/Backend/Concurso" class="btn btn-danger">Cancelar</a>
+    </div>
+                    }

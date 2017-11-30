@@ -1,0 +1,69 @@
+﻿@model SistemaConcursoA.Models.Ciclo
+
+@{
+    List<SistemaConcursoA.Models.Curso> cursos = ViewBag.cursos;
+}
+
+<h2>Ver</h2>
+
+<ol class="breadcrumb">
+    <li><a href="~/Backend/Ciclo/Index">Ciclo</a></li>
+    <li class="active">@Model.nombre</li>
+</ol>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Información detallada de la Ciclo</div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>ID:</dt>
+            <dd>@Model.ciclo_id</dd>
+            <dt>Ciclo:</dt>
+            <dd>@Model.nombre</dd>
+            <dt>Descripción:</dt>
+            <dd>@Model.descripcion</dd>
+        </dl>
+    </div>
+</div>
+
+
+@*<div class="panel panel-default">
+    <div class="panel-heading">Cursos</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Código</th>
+                    <th style="width:100px;">plan</th>
+                    <th style="width:100px;">ciclo</th>
+                    <th style="width:150px;">nombre</th>
+                    <th style="width:100px;">credito</th>
+                    <th style="width:100px;">hora-teoria</th>
+                    <th style="width:100px;">hora-practica</th>
+                    <th style="width:100px;">t-horas</th>
+                    <th style="width:100px;">pre-requisito</th>
+                    <th style="width:50px;">estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Curso)
+            {
+                    <tr>
+                        <th>@(c.curso_cod)</th>
+                        <th>@(c.PlanEstudio.nombre)</th>
+                        <th>@(c.Ciclo.nombre)</th>
+                        <th>@(c.nombre)</th>
+                        <th>@(c.credito)</th>
+                        <th>@(c.horasteoria)</th>
+                        <th>@(c.horaspractica)</th>
+                        <th>@(c.totalhoras)</th>
+                        <th>@(c.prerequisito)</th>
+                        <th>@(c.estado == "A" ? "Activo" : "Inactivo")</th>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>*@
+
